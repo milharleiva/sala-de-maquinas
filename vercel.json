@@ -1,8 +1,0 @@
-{
-  "crons": [
-    {
-      "path": "/api/check-vencidos",
-      "schedule": "0 6 * * *"
-    }
-  ]
-}
