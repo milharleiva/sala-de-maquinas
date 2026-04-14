@@ -68,7 +68,7 @@ export default async function AuditoriaPage({
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  const pagosRaw = await prisma().pago.findMany({
+  const pagosRaw = await prisma.pago.findMany({
     where: {
       mes: mesActual,
       ano: anoActual,
