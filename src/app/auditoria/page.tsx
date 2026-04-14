@@ -1,9 +1,17 @@
 import { createClient } from "@/lib/server";
-import { getPrisma } from "@/lib/prisma";
 import Link from "next/link";
 import LogoutButton from "@/components/LogoutButton";
 
 export const dynamic = "force-dynamic";
+
+async function getPrisma() {
+  const { PrismaClient } = await import("@prisma/client");
+  const { PrismaPg } = await import("@prisma/adapter-pg");
+  const { Pool } = await import("pg");
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL! });
+  const adapter = new PrismaPg(pool);
+  return new PrismaClient({ adapter });
+}
 
 const MESES = [
   "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -70,7 +78,7 @@ export default async function AuditoriaPage({
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  const prisma = getPrisma();
+  const prisma = await getPrisma();
   const pagosRaw = await prisma.pago.findMany({
     where: {
       mes: mesActual,
