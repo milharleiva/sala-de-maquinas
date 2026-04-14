@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import EditarClienteModal from "./EditarClienteModal";
 import EliminarClienteButton from "./EliminarClienteButton";
 import RegistrarPagoModal from "./RegistrarPagoModal";
-import { es } from "date-fns/locale";
 
 function ClienteCard({ 
   cliente, 
@@ -20,11 +19,10 @@ function ClienteCard({
   const [showEditModal, setShowEditModal] = useState(false);
   
   const formatDate = (date: string | Date) => {
-    return new Date(date).toLocaleDateString("es-ES", {
+    return new Date(date).toLocaleDateString("es-CL", {
       day: "numeric",
       month: "short",
       year: "numeric",
-      locale: es,
     });
   };
 

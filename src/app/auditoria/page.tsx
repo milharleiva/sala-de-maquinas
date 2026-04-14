@@ -53,12 +53,12 @@ export default async function AuditoriaPage({
   let pagos = pagosRaw.map(serializePago);
   
   if (searchTerm) {
-    pagos = pagos.filter((p) =>
+    pagos = pagos.filter((p: any) =>
       p.cliente.nombreCompleto.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
 
-  const totalMes = pagos.reduce((sum, pago) => sum + Number(pago.monto), 0);
+  const totalMes = pagos.reduce((sum: number, pago: any) => sum + Number(pago.monto), 0);
   const cantidadPagos = pagos.length;
 
   const mesesAnteriores = MESES.map((nombre, index) => ({
