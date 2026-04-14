@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/server";
 
@@ -19,6 +19,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Faltan campos requeridos" }, { status: 400 });
     }
 
+    const prisma = getPrisma();
     await prisma.cliente.create({
       data: {
         nombreCompleto,

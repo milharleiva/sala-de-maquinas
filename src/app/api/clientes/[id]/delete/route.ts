@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/server";
 
@@ -16,7 +16,7 @@ export async function DELETE(
     }
 
     const { id } = await params;
-
+    const prisma = getPrisma();
     await prisma.cliente.delete({
       where: { id },
     });

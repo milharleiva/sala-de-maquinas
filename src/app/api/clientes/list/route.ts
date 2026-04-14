@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { createClient } from "@/lib/server";
 import { isAfter, addMonths, startOfDay } from "date-fns";
 
@@ -13,6 +13,7 @@ export async function GET() {
     }
 
     const isAdmin = (user as any)?.user_metadata?.role === "ADMIN";
+    const prisma = getPrisma();
 
     const clientesRaw = await prisma.cliente.findMany({
       orderBy: { nombreCompleto: "asc" },

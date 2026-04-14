@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/server";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import Link from "next/link";
 import LogoutButton from "@/components/LogoutButton";
 
@@ -68,6 +68,7 @@ export default async function AuditoriaPage({
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
+  const prisma = getPrisma();
   const pagosRaw = await prisma.pago.findMany({
     where: {
       mes: mesActual,
