@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { getPrisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/server";
 
@@ -18,7 +17,15 @@ export async function DELETE(
     }
 
     const { id } = await params;
-    const prisma = await getPrisma();
+    
+    const { PrismaClient } = await import("@prisma/client");
+    const { PrismaPg } = await import("@prisma/adapter-pg");
+    const { Pool } = await import("pg");
+    
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL! });
+    const adapter = new PrismaPg(pool);
+    const prisma = new PrismaClient({ adapter });
+    
     await prisma.cliente.delete({
       where: { id },
     });

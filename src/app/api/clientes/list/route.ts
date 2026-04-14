@@ -1,9 +1,17 @@
 import { NextResponse } from "next/server";
-import { getPrisma } from "@/lib/prisma";
 import { createClient } from "@/lib/server";
 import { isAfter, addMonths, startOfDay } from "date-fns";
 
 export const dynamic = "force-dynamic";
+
+async function getPrisma() {
+  const { PrismaClient } = await import("@prisma/client");
+  const { PrismaPg } = await import("@prisma/adapter-pg");
+  const { Pool } = await import("pg");
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL! });
+  const adapter = new PrismaPg(pool);
+  return new PrismaClient({ adapter });
+}
 
 export async function GET() {
   try {
