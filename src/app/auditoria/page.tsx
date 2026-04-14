@@ -8,17 +8,46 @@ const MESES = [
   "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
 ];
 
-function serializePago(pago: any) {
+interface PagoSerializado {
+  id: string;
+  clienteId: string;
+  monto: number;
+  fechaPago: string;
+  mes: number;
+  ano: number;
+  createdAt: string;
+  cliente: {
+    id: string;
+    nombreCompleto: string;
+    fechaIngreso: string;
+    horario: string;
+    diasSemana: string[];
+    valorMensual: number;
+    estado: string;
+    ultimoPago: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+function serializePago(pago: any): PagoSerializado {
   return {
-    ...pago,
+    id: pago.id,
+    clienteId: pago.clienteId,
     monto: Number(pago.monto),
     fechaPago: pago.fechaPago.toISOString(),
+    mes: pago.mes,
+    ano: pago.ano,
     createdAt: pago.createdAt.toISOString(),
     cliente: {
-      ...pago.cliente,
-      valorMensual: Number(pago.cliente.valorMensual),
+      id: pago.cliente.id,
+      nombreCompleto: pago.cliente.nombreCompleto,
       fechaIngreso: pago.cliente.fechaIngreso.toISOString(),
-      ultimoPago: pago.cliente.ultimoPago?.toISOString(),
+      horario: pago.cliente.horario,
+      diasSemana: pago.cliente.diasSemana,
+      valorMensual: Number(pago.cliente.valorMensual),
+      estado: pago.cliente.estado,
+      ultimoPago: pago.cliente.ultimoPago?.toISOString() || null,
       createdAt: pago.cliente.createdAt.toISOString(),
       updatedAt: pago.cliente.updatedAt.toISOString(),
     },
@@ -50,15 +79,15 @@ export default async function AuditoriaPage({
     orderBy: { fechaPago: "desc" },
   });
 
-  let pagos = pagosRaw.map(serializePago);
+  let pagos: PagoSerializado[] = pagosRaw.map(serializePago);
   
   if (searchTerm) {
-    pagos = pagos.filter((p: any) =>
+    pagos = pagos.filter((p) =>
       p.cliente.nombreCompleto.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
 
-  const totalMes = pagos.reduce((sum: number, pago: any) => sum + Number(pago.monto), 0);
+  const totalMes = pagos.reduce((sum, pago) => sum + pago.monto, 0);
   const cantidadPagos = pagos.length;
 
   const mesesAnteriores = MESES.map((nombre, index) => ({
