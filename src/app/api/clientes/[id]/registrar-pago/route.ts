@@ -21,7 +21,7 @@ export async function POST(
     const body = await request.json();
     const { monto } = body;
 
-    const prisma = getPrisma();
+    const prisma = await getPrisma();
     const cliente = await prisma.cliente.findUnique({ where: { id: clienteId } });
     
     if (!cliente) {

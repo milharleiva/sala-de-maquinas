@@ -18,7 +18,7 @@ export async function DELETE(
     }
 
     const { id } = await params;
-    const prisma = getPrisma();
+    const prisma = await getPrisma();
     await prisma.cliente.delete({
       where: { id },
     });

@@ -15,7 +15,7 @@ export async function GET() {
     }
 
     const isAdmin = (user as any)?.user_metadata?.role === "ADMIN";
-    const prisma = getPrisma();
+    const prisma = await getPrisma();
 
     const clientesRaw = await prisma.cliente.findMany({
       orderBy: { nombreCompleto: "asc" },

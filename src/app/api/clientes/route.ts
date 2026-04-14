@@ -21,7 +21,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Faltan campos requeridos" }, { status: 400 });
     }
 
-    const prisma = getPrisma();
+    const prisma = await getPrisma();
     await prisma.cliente.create({
       data: {
         nombreCompleto,

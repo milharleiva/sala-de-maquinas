@@ -18,7 +18,7 @@ export async function POST(
     }
 
     const { id } = await params;
-    const prisma = getPrisma();
+    const prisma = await getPrisma();
 
     const cliente = await prisma.cliente.findUnique({ where: { id } });
 
