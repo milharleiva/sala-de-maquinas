@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { redirect, permanentRedirect } from "next/navigation";
 import { createClient } from "@/lib/server";
 
 export const dynamic = "force-dynamic";
@@ -9,12 +9,16 @@ export default async function Home() {
     const { data: { user } } = await supabase.auth.getUser();
 
     if (user) {
-      redirect("/clientes");
+      throw new Error("REDIRECT:" + "/clientes");
     } else {
-      redirect("/login");
+      throw new Error("REDIRECT:" + "/login");
     }
   } catch (e) {
+    const message = (e as Error).message;
+    if (message?.startsWith("REDIRECT:")) {
+      permanentRedirect(message.replace("REDIRECT:", ""));
+    }
     console.error(e);
-    return <div>Error: {(e as Error).message}</div>;
+    return <div>Error: {message}</div>;
   }
 }
