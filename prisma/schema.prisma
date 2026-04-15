@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      Role     @default(VIEWER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  VIEWER
+}
+
+model Cliente {
+  id              String   @id @default(cuid())
+  nombreCompleto  String
+  fechaIngreso    DateTime
+  horario         String
+  diasSemana      String[]
+  valorMensual    Decimal  @db.Decimal(10, 2)
+  estado          EstadoCliente @default(ACTIVO)
+  ultimoPago      DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  pagos           Pago[]
+
+  @@map("clientes")
+}
+
+model Pago {
+  id          String   @id @default(cuid())
+  clienteId   String
+  cliente     Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  monto       Decimal  @db.Decimal(10, 2)
+  fechaPago   DateTime @default(now())
+  mes         Int
+  ano         Int
+  createdAt   DateTime @default(now())
+
+  @@map("pagos")
+}
+
+enum EstadoCliente {
+  ACTIVO
+  VENCIDO
+}
