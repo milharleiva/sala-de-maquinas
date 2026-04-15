@@ -38,8 +38,8 @@ model Cliente {
 
 model Pago {
   id              String   @id @default(cuid())
-  clienteId       String?
-  clienteNombre  String
+  clienteId       String
+  nombre          String
   monto           Decimal  @db.Decimal(10, 2)
   fechaPago       DateTime @default(now())
   mes             Int

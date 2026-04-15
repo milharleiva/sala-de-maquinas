@@ -46,7 +46,7 @@ export async function POST(request: Request) {
     await prisma.pago.create({
       data: {
         clienteId: cliente.id,
-        clienteNombre: nombreCompleto,
+        nombre: nombreCompleto,
         monto: parseFloat(valorMensual),
         fechaPago: new Date(fechaIngreso),
         mes: ingresoDate.getMonth() + 1,

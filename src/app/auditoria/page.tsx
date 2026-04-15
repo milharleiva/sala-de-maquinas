@@ -20,8 +20,8 @@ const MESES = [
 
 interface PagoSerializado {
   id: string;
-  clienteId: string | null;
-  clienteNombre: string;
+  clienteId: string;
+  nombre: string;
   monto: number;
   fechaPago: string;
   mes: number;
@@ -33,7 +33,7 @@ function serializePago(pago: any): PagoSerializado {
   return {
     id: pago.id,
     clienteId: pago.clienteId,
-    clienteNombre: pago.clienteNombre,
+    nombre: pago.nombre || "Sin nombre",
     monto: Number(pago.monto),
     fechaPago: pago.fechaPago.toISOString(),
     mes: pago.mes,
@@ -177,7 +177,7 @@ export default async function AuditoriaPage({
                   className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-3 sm:p-4 border rounded-lg border-black gap-2"
                 >
                   <div>
-                    <p className="font-semibold text-black text-sm sm:text-base">{pago.clienteNombre}</p>
+                    <p className="font-semibold text-black text-sm sm:text-base">{pago.nombre}</p>
                     <p className="text-xs sm:text-sm text-black">
                       Fecha: {new Date(pago.fechaPago).toLocaleDateString("es-ES")}
                     </p>
