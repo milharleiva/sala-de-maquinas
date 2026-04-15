@@ -20,47 +20,25 @@ const MESES = [
 
 interface PagoSerializado {
   id: string;
-  clienteId: string;
+  clienteId: string | null;
+  clienteNombre: string;
   monto: number;
   fechaPago: string;
   mes: number;
   ano: number;
   createdAt: string;
-  cliente: {
-    id: string;
-    nombreCompleto: string;
-    fechaIngreso: string;
-    horario: string;
-    diasSemana: string[];
-    valorMensual: number;
-    estado: string;
-    ultimoPago: string | null;
-    createdAt: string;
-    updatedAt: string;
-  };
 }
 
 function serializePago(pago: any): PagoSerializado {
   return {
     id: pago.id,
     clienteId: pago.clienteId,
+    clienteNombre: pago.clienteNombre,
     monto: Number(pago.monto),
     fechaPago: pago.fechaPago.toISOString(),
     mes: pago.mes,
     ano: pago.ano,
     createdAt: pago.createdAt.toISOString(),
-    cliente: {
-      id: pago.cliente.id,
-      nombreCompleto: pago.cliente.nombreCompleto,
-      fechaIngreso: pago.cliente.fechaIngreso.toISOString(),
-      horario: pago.cliente.horario,
-      diasSemana: pago.cliente.diasSemana,
-      valorMensual: Number(pago.cliente.valorMensual),
-      estado: pago.cliente.estado,
-      ultimoPago: pago.cliente.ultimoPago?.toISOString() || null,
-      createdAt: pago.cliente.createdAt.toISOString(),
-      updatedAt: pago.cliente.updatedAt.toISOString(),
-    },
   };
 }
 
@@ -84,9 +62,6 @@ export default async function AuditoriaPage({
       mes: mesActual,
       ano: anoActual,
     },
-    include: {
-      cliente: true,
-    },
     orderBy: { fechaPago: "desc" },
   });
 
@@ -94,7 +69,7 @@ export default async function AuditoriaPage({
   
   if (searchTerm) {
     pagos = pagos.filter((p) =>
-      p.cliente.nombreCompleto.toLowerCase().includes(searchTerm.toLowerCase())
+      p.clienteNombre.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
 
@@ -202,7 +177,7 @@ export default async function AuditoriaPage({
                   className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-3 sm:p-4 border rounded-lg border-black gap-2"
                 >
                   <div>
-                    <p className="font-semibold text-black text-sm sm:text-base">{pago.cliente.nombreCompleto}</p>
+                    <p className="font-semibold text-black text-sm sm:text-base">{pago.clienteNombre}</p>
                     <p className="text-xs sm:text-sm text-black">
                       Fecha: {new Date(pago.fechaPago).toLocaleDateString("es-ES")}
                     </p>

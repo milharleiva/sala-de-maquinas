@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     }
 
     const prisma = await getPrisma();
-    await prisma.cliente.create({
+    const cliente = await prisma.cliente.create({
       data: {
         nombreCompleto,
         fechaIngreso: new Date(fechaIngreso),
@@ -39,6 +39,18 @@ export async function POST(request: Request) {
         valorMensual: parseFloat(valorMensual),
         estado: "ACTIVO",
         ultimoPago: new Date(),
+      },
+    });
+
+    const ingresoDate = new Date(fechaIngreso);
+    await prisma.pago.create({
+      data: {
+        clienteId: cliente.id,
+        clienteNombre: nombreCompleto,
+        monto: parseFloat(valorMensual),
+        fechaPago: new Date(fechaIngreso),
+        mes: ingresoDate.getMonth() + 1,
+        ano: ingresoDate.getFullYear(),
       },
     });
 

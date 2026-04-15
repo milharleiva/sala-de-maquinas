@@ -33,20 +33,18 @@ model Cliente {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  pagos           Pago[]
-
   @@map("clientes")
 }
 
 model Pago {
-  id          String   @id @default(cuid())
-  clienteId   String
-  cliente     Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
-  monto       Decimal  @db.Decimal(10, 2)
-  fechaPago   DateTime @default(now())
-  mes         Int
-  ano         Int
-  createdAt   DateTime @default(now())
+  id              String   @id @default(cuid())
+  clienteId       String?
+  clienteNombre  String
+  monto           Decimal  @db.Decimal(10, 2)
+  fechaPago       DateTime @default(now())
+  mes             Int
+  ano             Int
+  createdAt       DateTime @default(now())
 
   @@map("pagos")
 }
