@@ -17,6 +17,7 @@ export default function NuevoClienteForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
+    rut: "",
     nombreCompleto: "",
     fechaIngreso: new Date().toISOString().split("T")[0],
     horario: "",
@@ -68,6 +69,22 @@ export default function NuevoClienteForm() {
       <div className="max-w-lg mx-auto px-4 py-4 sm:py-8">
         <div className="bg-white rounded-lg shadow p-4 sm:p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1 text-black">
+                RUT
+              </label>
+              <input
+                type="text"
+                value={formData.rut}
+                onChange={(e) =>
+                  setFormData({ ...formData, rut: e.target.value })
+                }
+                className="w-full px-3 py-2 border rounded-lg text-black text-sm sm:text-base"
+                placeholder="Ej: 12345678-9"
+                required
+              />
+            </div>
+
             <div>
               <label className="block text-sm font-medium mb-1 text-black">
                 Nombre Completo

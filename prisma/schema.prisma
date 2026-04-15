@@ -23,6 +23,7 @@ enum Role {
 
 model Cliente {
   id              String   @id @default(cuid())
+  rut             String
   nombreCompleto  String
   fechaIngreso    DateTime
   horario         String

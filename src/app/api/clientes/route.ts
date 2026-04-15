@@ -23,17 +23,18 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { nombreCompleto, fechaIngreso, horario, diasSemana, valorMensual } = body;
+    const { rut, nombreCompleto, fechaIngreso, horario, diasSemana, valorMensual } = body;
 
-    if (!nombreCompleto || !fechaIngreso || !horario || !diasSemana || !valorMensual) {
+    if (!rut || !nombreCompleto || !fechaIngreso || !horario || !diasSemana || !valorMensual) {
       return NextResponse.json({ error: "Faltan campos requeridos" }, { status: 400 });
     }
 
     const prisma = await getPrisma();
     const cliente = await prisma.cliente.create({
       data: {
+        rut,
         nombreCompleto,
-        fechaIngreso: new Date(fechaIngreso),
+        fechaIngreso: new Date(new Date(fechaIngreso).getTime() + 12 * 60 * 60 * 1000),
         horario,
         diasSemana,
         valorMensual: parseFloat(valorMensual),
@@ -42,13 +43,13 @@ export async function POST(request: Request) {
       },
     });
 
-    const ingresoDate = new Date(fechaIngreso);
+    const ingresoDate = new Date(new Date(fechaIngreso).getTime() + 12 * 60 * 60 * 1000);
     await prisma.pago.create({
       data: {
         clienteId: cliente.id,
         nombre: nombreCompleto,
         monto: parseFloat(valorMensual),
-        fechaPago: new Date(fechaIngreso),
+        fechaPago: ingresoDate,
         mes: ingresoDate.getMonth() + 1,
         ano: ingresoDate.getFullYear(),
       },

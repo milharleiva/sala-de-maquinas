@@ -50,9 +50,9 @@ export async function PUT(
 
     const { id } = await params;
     const body = await request.json();
-    const { nombreCompleto, fechaIngreso, horario, diasSemana, valorMensual } = body;
+    const { rut, nombreCompleto, fechaIngreso, horario, diasSemana, valorMensual } = body;
 
-    if (!nombreCompleto || !fechaIngreso || !horario || !diasSemana || !valorMensual) {
+    if (!rut || !nombreCompleto || !fechaIngreso || !horario || !diasSemana || !valorMensual) {
       return NextResponse.json({ error: "Faltan campos requeridos" }, { status: 400 });
     }
 
@@ -60,8 +60,9 @@ export async function PUT(
     await prisma.cliente.update({
       where: { id },
       data: {
+        rut,
         nombreCompleto,
-        fechaIngreso: new Date(fechaIngreso),
+        fechaIngreso: new Date(new Date(fechaIngreso).getTime() + 12 * 60 * 60 * 1000),
         horario,
         diasSemana,
         valorMensual: parseFloat(valorMensual),
