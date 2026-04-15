@@ -1,7 +1,10 @@
 {
-  "buildCommand": "npm run build",
-  "installCommand": "npm install",
-  "outputDirectory": ".next",
+  "buildCommand": "npm run vercel-build",
+  "installCommand": "npm install && rm -rf node_modules/.prisma && npx prisma generate",
+  "env": {
+    "VERCEL_FORCE_NO_BUILD_CACHE": "1",
+    "FORCE_CACHE_CLEAR": "3"
+  },
   "functions": {
     "src/app/api/**/*.ts": {
       "maxDuration": 30
