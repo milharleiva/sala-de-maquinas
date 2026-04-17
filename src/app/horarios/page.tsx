@@ -6,6 +6,7 @@ import LogoutButton from "@/components/LogoutButton";
 import { createClient } from "@/lib/supabase";
 
 const DIAS = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"];
+const HORARIOS_POSIBLES = [8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21];
 
 function extraerHoraInicio(horario: string): number {
   const match = horario.trim().match(/^(\d{1,2})/);
@@ -48,7 +49,7 @@ export default function HorariosPage() {
       c.diasSemana.includes(selectedDia)
     );
 
-    const horas = [...new Set(clientesDelDia.map((c) => extraerHoraInicio(c.horario)))].sort((a, b) => a - b);
+    const horas = HORARIOS_POSIBLES;
     setHorariosDisponibles(horas);
     setSelectedHora("");
     setClientesFiltrados([]);
