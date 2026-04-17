@@ -30,8 +30,8 @@ export async function GET() {
     });
 
     for (const cliente of clientesRaw) {
-      if (cliente.ultimoPago) {
-        const proximoVencimiento = addMonths(cliente.ultimoPago, 1);
+      if (cliente.fechaIngreso) {
+        const proximoVencimiento = addMonths(cliente.fechaIngreso, 1);
         if (isAfter(startOfDay(new Date()), startOfDay(proximoVencimiento))) {
           if (cliente.estado !== "VENCIDO") {
             await prisma.cliente.update({

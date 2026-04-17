@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import EditarClienteModal from "./EditarClienteModal";
 import EliminarClienteButton from "./EliminarClienteButton";
 import RegistrarPagoModal from "./RegistrarPagoModal";
+import MarcarVencidoButton from "./MarcarVencidoButton";
 
 function ClienteCard({ 
   cliente, 
@@ -64,6 +65,9 @@ function ClienteCard({
               Editar
             </button>
             <EliminarClienteButton clienteId={cliente.id} onDelete={handlePagoExitoso} />
+            {cliente.estado === "ACTIVO" && (
+              <MarcarVencidoButton clienteId={cliente.id} />
+            )}
             {cliente.estado === "VENCIDO" && (
               <button
                 onClick={() => setShowPagoModal(true)}

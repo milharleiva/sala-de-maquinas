@@ -71,7 +71,7 @@ export default function NuevoClienteForm() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-1 text-black">
-                RUT
+                RUT <span className="font-normal text-gray-500">(Opcional)</span>
               </label>
               <input
                 type="text"
@@ -81,7 +81,6 @@ export default function NuevoClienteForm() {
                 }
                 className="w-full px-3 py-2 border rounded-lg text-black text-sm sm:text-base"
                 placeholder="Ej: 12345678-9"
-                required
               />
             </div>
 

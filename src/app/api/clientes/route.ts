@@ -25,14 +25,14 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { rut, nombreCompleto, fechaIngreso, horario, diasSemana, valorMensual } = body;
 
-    if (!rut || !nombreCompleto || !fechaIngreso || !horario || !diasSemana || !valorMensual) {
+    if (!nombreCompleto || !fechaIngreso || !horario || !diasSemana || !valorMensual) {
       return NextResponse.json({ error: "Faltan campos requeridos" }, { status: 400 });
     }
 
     const prisma = await getPrisma();
     const cliente = await prisma.cliente.create({
       data: {
-        rut,
+rut: rut || "",
         nombreCompleto,
         fechaIngreso: new Date(new Date(fechaIngreso).getTime() + 12 * 60 * 60 * 1000),
         horario,
