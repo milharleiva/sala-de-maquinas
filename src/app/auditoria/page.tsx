@@ -69,7 +69,7 @@ export default async function AuditoriaPage({
   
   if (searchTerm) {
     pagos = pagos.filter((p) =>
-      p.clienteNombre.toLowerCase().includes(searchTerm.toLowerCase())
+      (p.nombre || "").toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
 
