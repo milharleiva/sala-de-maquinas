@@ -46,6 +46,9 @@ function ClienteCard({
             <p className="text-xs sm:text-sm text-black">
               Dias: {cliente.diasSemana.join(", ")}
             </p>
+            {cliente.nota && (
+              <p className="text-xs sm:text-sm text-gray-600 italic">Nota: {cliente.nota}</p>
+            )}
           </div>
           <div className="text-left sm:text-right">
             <p className="font-bold text-base sm:text-lg text-black">${Number(cliente.valorMensual)}</p>

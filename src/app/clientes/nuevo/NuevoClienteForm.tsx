@@ -23,6 +23,7 @@ export default function NuevoClienteForm() {
     horario: "",
     diasSemana: [] as string[],
     valorMensual: "",
+    nota: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -163,6 +164,21 @@ export default function NuevoClienteForm() {
                 }
                 className="w-full px-3 py-2 border rounded-lg text-black text-sm sm:text-base"
                 required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1 text-black">
+                Nota <span className="font-normal text-gray-500">(Opcional)</span>
+              </label>
+              <textarea
+                value={formData.nota}
+                onChange={(e) =>
+                  setFormData({ ...formData, nota: e.target.value })
+                }
+                className="w-full px-3 py-2 border rounded-lg text-black text-sm sm:text-base"
+                rows={3}
+                placeholder="Notas especiales del cliente..."
               />
             </div>
 

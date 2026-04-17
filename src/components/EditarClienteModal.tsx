@@ -31,6 +31,7 @@ export default function EditarClienteModal({
     horario: cliente.horario,
     diasSemana: cliente.diasSemana,
     valorMensual: cliente.valorMensual.toString(),
+    nota: cliente.nota || "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -76,21 +77,20 @@ export default function EditarClienteModal({
         <h3 className="text-lg font-bold text-black mb-4">Editar Cliente</h3>
         
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1 text-black">
-              RUT
-            </label>
-            <input
-              type="text"
-              value={formData.rut}
-              onChange={(e) =>
-                setFormData({ ...formData, rut: e.target.value })
-              }
-              className="w-full px-3 py-2 border rounded-lg text-black text-sm sm:text-base"
-              placeholder="Ej: 12345678-9"
-              required
-            />
-          </div>
+<div>
+              <label className="block text-sm font-medium mb-1 text-black">
+                RUT <span className="font-normal text-gray-500">(Opcional)</span>
+              </label>
+              <input
+                type="text"
+                value={formData.rut}
+                onChange={(e) =>
+                  setFormData({ ...formData, rut: e.target.value })
+                }
+                className="w-full px-3 py-2 border rounded-lg text-black text-sm sm:text-base"
+                placeholder="Ej: 12345678-9"
+              />
+            </div>
 
           <div>
             <label className="block text-sm font-medium mb-1 text-black">
@@ -158,24 +158,39 @@ export default function EditarClienteModal({
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1 text-black">
-              Valor Mensual
-            </label>
-            <input
-              type="number"
-              step="0.01"
-              min="0"
-              value={formData.valorMensual}
-              onChange={(e) =>
-                setFormData({ ...formData, valorMensual: e.target.value })
-              }
-              className="w-full px-3 py-2 border rounded-lg text-black text-sm sm:text-base"
-              required
-            />
-          </div>
+<div>
+              <label className="block text-sm font-medium mb-1 text-black">
+                Valor Mensual
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                min="0"
+                value={formData.valorMensual}
+                onChange={(e) =>
+                  setFormData({ ...formData, valorMensual: e.target.value })
+                }
+                className="w-full px-3 py-2 border rounded-lg text-black text-sm sm:text-base"
+                required
+              />
+            </div>
 
-          <div className="flex gap-3 pt-2">
+            <div>
+              <label className="block text-sm font-medium mb-1 text-black">
+                Nota <span className="font-normal text-gray-500">(Opcional)</span>
+              </label>
+              <textarea
+                value={formData.nota}
+                onChange={(e) =>
+                  setFormData({ ...formData, nota: e.target.value })
+                }
+                className="w-full px-3 py-2 border rounded-lg text-black text-sm sm:text-base"
+                rows={3}
+                placeholder="Notas especiales del cliente..."
+              />
+            </div>
+
+            <div className="flex gap-3 pt-2">
             <button
               type="submit"
               disabled={loading}

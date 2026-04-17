@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { rut, nombreCompleto, fechaIngreso, horario, diasSemana, valorMensual } = body;
+    const { rut, nombreCompleto, fechaIngreso, horario, diasSemana, valorMensual, nota } = body;
 
     if (!nombreCompleto || !fechaIngreso || !horario || !diasSemana || !valorMensual) {
       return NextResponse.json({ error: "Faltan campos requeridos" }, { status: 400 });
@@ -40,6 +40,7 @@ rut: rut || "",
         valorMensual: parseFloat(valorMensual),
         estado: "ACTIVO",
         ultimoPago: new Date(),
+        nota: nota || null,
       },
     });
 

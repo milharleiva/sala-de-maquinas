@@ -31,6 +31,7 @@ model Cliente {
   valorMensual    Decimal  @db.Decimal(10, 2)
   estado          EstadoCliente @default(ACTIVO)
   ultimoPago      DateTime?
+  nota            String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
