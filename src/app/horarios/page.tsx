@@ -10,7 +10,9 @@ const HORARIOS_POSIBLES = [8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21];
 
 function extraerHoraInicio(horario: string): number {
   const match = horario.trim().match(/^(\d{1,2})/);
-  return match ? parseInt(match[1]) : 0;
+  if (!match) return 0;
+  const hora = parseInt(match[1]);
+  return hora >= 8 && hora <= 22 ? hora : 0;
 }
 
 function formatearRango(hora: number): string {
