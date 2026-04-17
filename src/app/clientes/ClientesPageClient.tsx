@@ -97,7 +97,7 @@ export default function ClientesPageClient() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow">
+      <nav className="bg-white shadow relative">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <div className="flex justify-between items-center">
             <h1 className="text-lg sm:text-xl font-bold text-black">Sala de Maquinas</h1>
@@ -106,15 +106,17 @@ export default function ClientesPageClient() {
               className="md:hidden p-2 text-black"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={menuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
               </svg>
             </button>
-            <div className={`${menuOpen ? 'flex' : 'hidden'} md:flex flex-col md:flex-row absolute md:relative top-full left-0 md:top-auto w-full md:w-auto bg-white md:bg-transparent shadow-md md:shadow-none z-50 gap-2 p-4 md:p-0 items-start md:items-center`}>
-              <span className="text-sm text-black truncate max-w-[150px] md:max-w-none">{userEmail}</span>
-              {isAdmin && <span className="text-xs text-black bg-blue-100 px-2 py-1 rounded">Admin</span>}
+          </div>
+          {menuOpen && (
+            <div className="md:hidden py-3 border-t flex flex-col gap-3">
+              <span className="text-sm text-black">{userEmail}</span>
+              {isAdmin && <span className="text-xs text-black bg-blue-100 px-2 py-1 rounded w-fit">Admin</span>}
               <LogoutButton />
             </div>
-          </div>
+          )}
         </div>
       </nav>
 
@@ -138,6 +140,12 @@ export default function ClientesPageClient() {
                 className="bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 text-sm whitespace-nowrap"
               >
                 Auditoria
+              </Link>
+              <Link
+                href="/horarios"
+                className="bg-purple-600 text-white px-3 py-2 rounded-lg hover:bg-purple-700 text-sm whitespace-nowrap"
+              >
+                Horarios
               </Link>
             {isAdmin && (
               <Link
