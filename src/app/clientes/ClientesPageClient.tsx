@@ -99,8 +99,13 @@ export default function ClientesPageClient() {
     <div className="min-h-screen bg-gray-100">
       <nav className="bg-white shadow relative">
         <div className="max-w-7xl mx-auto px-4 py-3">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center gap-4">
             <h1 className="text-lg sm:text-xl font-bold text-black">Sala de Maquinas</h1>
+            <div className="hidden md:flex items-center gap-4">
+              <span className="text-sm text-gray-600">{userEmail}</span>
+              {isAdmin && <span className="text-xs text-black bg-blue-100 px-2 py-1 rounded">Admin</span>}
+              <LogoutButton />
+            </div>
             <button 
               onClick={() => setMenuOpen(!menuOpen)}
               className="md:hidden p-2 text-black"
