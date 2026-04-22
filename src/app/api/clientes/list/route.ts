@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/server";
-import { isAfter, addMonths, startOfDay } from "date-fns";
+import { isAfter, startOfDay, getDate, setDate, addMonths } from "date-fns";
 
 export const dynamic = "force-dynamic";
 
@@ -30,19 +30,14 @@ export async function GET() {
     });
 
     for (const cliente of clientesRaw) {
-      if (cliente.ultimoPago) {
-        const proximoVencimiento = addMonths(cliente.ultimoPago, 1);
-        if (isAfter(startOfDay(new Date()), startOfDay(proximoVencimiento))) {
-          if (cliente.estado !== "VENCIDO") {
-            await prisma.cliente.update({
-              where: { id: cliente.id },
-              data: { estado: "VENCIDO" },
-            });
-          }
+      if (cliente.fechaIngreso) {
+        const diaVencimiento = getDate(cliente.fechaIngreso);
+        const hoy = startOfDay(new Date());
+        let proximoVencimiento = setDate(hoy, diaVencimiento);
+        if (isAfter(hoy, proximoVencimiento)) {
+          proximoVencimiento = addMonths(proximoVencimiento, 1);
         }
-      } else if (cliente.fechaIngreso) {
-        const proximoVencimiento = addMonths(cliente.fechaIngreso, 1);
-        if (isAfter(startOfDay(new Date()), startOfDay(proximoVencimiento))) {
+        if (isAfter(hoy, startOfDay(proximoVencimiento))) {
           if (cliente.estado !== "VENCIDO") {
             await prisma.cliente.update({
               where: { id: cliente.id },
