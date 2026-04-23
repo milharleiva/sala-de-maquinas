@@ -23,19 +23,20 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { rut, nombreCompleto, fechaIngreso, horario, diasSemana, valorMensual, nota } = body;
+    const { rut, nombreCompleto, fechaIngreso, horariosPorDia, diasSemana, valorMensual, nota } = body;
 
-    if (!nombreCompleto || !fechaIngreso || !horario || !diasSemana || !valorMensual) {
+    if (!nombreCompleto || !fechaIngreso || !diasSemana || diasSemana.length === 0 || !valorMensual) {
       return NextResponse.json({ error: "Faltan campos requeridos" }, { status: 400 });
     }
 
     const prisma = await getPrisma();
     const cliente = await prisma.cliente.create({
       data: {
-rut: rut || "",
+        rut: rut || "",
         nombreCompleto,
         fechaIngreso: new Date(new Date(fechaIngreso).getTime() + 12 * 60 * 60 * 1000),
-        horario,
+        horario: "",
+        horariosPorDia: horariosPorDia || {},
         diasSemana,
         valorMensual: parseFloat(valorMensual),
         estado: "ACTIVO",

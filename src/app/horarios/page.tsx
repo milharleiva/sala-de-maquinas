@@ -6,17 +6,31 @@ import LogoutButton from "@/components/LogoutButton";
 import { createClient } from "@/lib/supabase";
 
 const DIAS = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"];
-const HORARIOS_POSIBLES = [8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21];
+const HORARIOS_POSIBLES = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
 
-function extraerHoraInicio(horario: string): number {
-  const match = horario.trim().match(/^(\d{1,2})/);
-  if (!match) return 0;
-  const hora = parseInt(match[1]);
-  return hora >= 8 && hora <= 22 ? hora : 0;
+function parseTime(timeStr: string): number {
+  const [horas, minutos] = timeStr.split(":").map(Number);
+  return horas + minutos / 60;
 }
 
 function formatearRango(hora: number): string {
   return `${hora.toString().padStart(2, '0')}:00-${(hora + 1).toString().padStart(2, '0')}:00`;
+}
+
+function clienteEnHorario(horariosPorDia: Record<string, { inicio: string; fin: string }>, dia: string, hora: number): boolean {
+  if (!horariosPorDia || !horariosPorDia[dia]) return false;
+  
+  const horario = horariosPorDia[dia];
+  const horaInicio = parseTime(horario.inicio);
+  const horaFin = parseTime(horario.fin);
+  const horaBloque = hora + 1;
+  
+  return hora >= horaInicio && horaBloque <= horaFin;
+}
+
+function formatearHorarioCliente(horariosPorDia: Record<string, { inicio: string; fin: string }>, dia: string): string {
+  if (!horariosPorDia || !horariosPorDia[dia]) return "-";
+  return `${horariosPorDia[dia].inicio} - ${horariosPorDia[dia].fin}`;
 }
 
 export default function HorariosPage() {
@@ -65,7 +79,7 @@ export default function HorariosPage() {
 
     const filtrados = clientes.filter((c) =>
       c.diasSemana.includes(selectedDia) &&
-      extraerHoraInicio(c.horario) === selectedHora
+      clienteEnHorario(c.horariosPorDia || {}, selectedDia, selectedHora)
     );
 
     setClientesFiltrados(filtrados);
@@ -74,7 +88,7 @@ export default function HorariosPage() {
   const getCantidadPorHorario = (dia: string, hora: number): number => {
     return clientes.filter((c) =>
       c.diasSemana.includes(dia) &&
-      extraerHoraInicio(c.horario) === hora
+      clienteEnHorario(c.horariosPorDia || {}, dia, hora)
     ).length;
   };
 
@@ -153,7 +167,7 @@ export default function HorariosPage() {
                 {clientesFiltrados.map((cliente) => (
                   <div key={cliente.id} className="p-3 border rounded-lg">
                     <p className="font-medium text-black">{cliente.nombreCompleto}</p>
-                    <p className="text-sm text-gray-600">Horario: {cliente.horario}</p>
+                    <p className="text-sm text-gray-600">Horario: {formatearHorarioCliente(cliente.horariosPorDia || {}, selectedDia)}</p>
                   </div>
                 ))}
               </div>

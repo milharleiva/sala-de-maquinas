@@ -13,6 +13,42 @@ const DIAS_SEMANA = [
   "Domingo",
 ];
 
+const HORAS_DISPONIBLES = [
+  { value: "6:00", label: "6:00" },
+  { value: "6:30", label: "6:30" },
+  { value: "7:00", label: "7:00" },
+  { value: "7:30", label: "7:30" },
+  { value: "8:00", label: "8:00" },
+  { value: "8:30", label: "8:30" },
+  { value: "9:00", label: "9:00" },
+  { value: "9:30", label: "9:30" },
+  { value: "10:00", label: "10:00" },
+  { value: "10:30", label: "10:30" },
+  { value: "11:00", label: "11:00" },
+  { value: "11:30", label: "11:30" },
+  { value: "12:00", label: "12:00" },
+  { value: "12:30", label: "12:30" },
+  { value: "13:00", label: "13:00" },
+  { value: "13:30", label: "13:30" },
+  { value: "14:00", label: "14:00" },
+  { value: "14:30", label: "14:30" },
+  { value: "15:00", label: "15:00" },
+  { value: "15:30", label: "15:30" },
+  { value: "16:00", label: "16:00" },
+  { value: "16:30", label: "16:30" },
+  { value: "17:00", label: "17:00" },
+  { value: "17:30", label: "17:30" },
+  { value: "18:00", label: "18:00" },
+  { value: "18:30", label: "18:30" },
+  { value: "19:00", label: "19:00" },
+  { value: "19:30", label: "19:30" },
+  { value: "20:00", label: "20:00" },
+  { value: "20:30", label: "20:30" },
+  { value: "21:00", label: "21:00" },
+  { value: "21:30", label: "21:30" },
+  { value: "22:00", label: "22:00" },
+];
+
 export default function NuevoClienteForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -20,7 +56,7 @@ export default function NuevoClienteForm() {
     rut: "",
     nombreCompleto: "",
     fechaIngreso: new Date().toISOString().split("T")[0],
-    horario: "",
+    horariosPorDia: {} as Record<string, { inicio: string; fin: string }>,
     diasSemana: [] as string[],
     valorMensual: "",
     nota: "",
@@ -51,11 +87,36 @@ export default function NuevoClienteForm() {
   };
 
   const toggleDia = (dia: string) => {
+    setFormData((prev) => {
+      const newDias = prev.diasSemana.includes(dia)
+        ? prev.diasSemana.filter((d) => d !== dia)
+        : [...prev.diasSemana, dia];
+
+      const newHorarios = { ...prev.horariosPorDia };
+      if (!prev.diasSemana.includes(dia)) {
+        newHorarios[dia] = { inicio: "17:00", fin: "18:00" };
+      } else {
+        delete newHorarios[dia];
+      }
+
+      return {
+        ...prev,
+        diasSemana: newDias,
+        horariosPorDia: newHorarios,
+      };
+    });
+  };
+
+  const updateHorarioDia = (dia: string, campo: "inicio" | "fin", valor: string) => {
     setFormData((prev) => ({
       ...prev,
-      diasSemana: prev.diasSemana.includes(dia)
-        ? prev.diasSemana.filter((d) => d !== dia)
-        : [...prev.diasSemana, dia],
+      horariosPorDia: {
+        ...prev.horariosPorDia,
+        [dia]: {
+          ...prev.horariosPorDia[dia],
+          [campo]: valor,
+        },
+      },
     }));
   };
 
@@ -116,20 +177,6 @@ export default function NuevoClienteForm() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1 text-black">Horario</label>
-              <input
-                type="text"
-                placeholder="Ej: 6:00 - 22:00"
-                value={formData.horario}
-                onChange={(e) =>
-                  setFormData({ ...formData, horario: e.target.value })
-                }
-                className="w-full px-3 py-2 border rounded-lg text-black text-sm sm:text-base"
-                required
-              />
-            </div>
-
-            <div>
               <label className="block text-sm font-medium mb-2 text-black">
                 Dias de la Semana
               </label>
@@ -150,6 +197,44 @@ export default function NuevoClienteForm() {
                 ))}
               </div>
             </div>
+
+            {formData.diasSemana.length > 0 && (
+              <div className="bg-gray-50 p-3 rounded-lg border">
+                <label className="block text-sm font-medium mb-3 text-black">
+                  Horario por Día
+                </label>
+                <div className="space-y-3">
+                  {formData.diasSemana.map((dia) => (
+                    <div key={dia} className="flex items-center gap-2">
+                      <span className="w-20 text-sm text-black font-medium">{dia}:</span>
+                      <select
+                        value={formData.horariosPorDia[dia]?.inicio || "17:00"}
+                        onChange={(e) => updateHorarioDia(dia, "inicio", e.target.value)}
+                        className="flex-1 px-2 py-1.5 border rounded text-black text-sm"
+                      >
+                        {HORAS_DISPONIBLES.map((h) => (
+                          <option key={h.value} value={h.value}>
+                            {h.label}
+                          </option>
+                        ))}
+                      </select>
+                      <span className="text-sm text-black">a</span>
+                      <select
+                        value={formData.horariosPorDia[dia]?.fin || "18:00"}
+                        onChange={(e) => updateHorarioDia(dia, "fin", e.target.value)}
+                        className="flex-1 px-2 py-1.5 border rounded text-black text-sm"
+                      >
+                        {HORAS_DISPONIBLES.map((h) => (
+                          <option key={h.value} value={h.value}>
+                            {h.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div>
               <label className="block text-sm font-medium mb-1 text-black">

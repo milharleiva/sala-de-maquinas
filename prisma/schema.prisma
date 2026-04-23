@@ -26,7 +26,8 @@ model Cliente {
   rut             String
   nombreCompleto  String
   fechaIngreso    DateTime
-  horario         String
+  horario         String   @default("") // Mantenido por compatibilidad
+  horariosPorDia  Json     @default("{}") // { "Lunes": "17:30-18:30", "Martes": "19:00-20:00" }
   diasSemana      String[]
   valorMensual    Decimal  @db.Decimal(10, 2)
   estado          EstadoCliente @default(ACTIVO)
