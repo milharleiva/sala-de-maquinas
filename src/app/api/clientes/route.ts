@@ -4,6 +4,19 @@ import { createClient } from "@/lib/server";
 
 export const dynamic = "force-dynamic";
 
+function parseTime(timeStr: string): number {
+  const [horas, minutos] = timeStr.split(":").map(Number);
+  return horas + minutos / 60;
+}
+
+function clienteEnHorario(horariosPorDia: any, dia: string, hora: number): boolean {
+  if (!horariosPorDia || !horariosPorDia[dia]) return false;
+  const { inicio, fin } = horariosPorDia[dia];
+  const horaInicio = parseTime(inicio);
+  const horaFin = parseTime(fin);
+  return hora >= horaInicio && (hora + 1) <= horaFin;
+}
+
 async function getPrisma() {
   const { PrismaClient } = await import("@prisma/client");
   const { PrismaPg } = await import("@prisma/adapter-pg");
@@ -30,6 +43,36 @@ export async function POST(request: Request) {
     }
 
     const prisma = await getPrisma();
+
+    if (horariosPorDia && diasSemana.length > 0) {
+      const allClients = await prisma.cliente.findMany();
+
+      for (const dia of diasSemana) {
+        const horario = horariosPorDia[dia];
+        if (!horario?.inicio || !horario?.fin) continue;
+
+        const horaInicio = parseTime(horario.inicio);
+        const horaFin = parseTime(horario.fin);
+
+        for (let h = 6; h <= 22; h++) {
+          if (h >= horaInicio && (h + 1) <= horaFin) {
+            const count = allClients.filter((c: any) =>
+              c.diasSemana.includes(dia) &&
+              clienteEnHorario(c.horariosPorDia, dia, h)
+            ).length;
+
+            if (count >= 17) {
+              const horaStr = `${h.toString().padStart(2, "0")}:00-${(h + 1).toString().padStart(2, "0")}:00`;
+              return NextResponse.json(
+                { error: `El horario ${dia} ${horaStr} ya tiene 17 personas` },
+                { status: 409 }
+              );
+            }
+          }
+        }
+      }
+    }
+
     const cliente = await prisma.cliente.create({
       data: {
         rut: rut || "",

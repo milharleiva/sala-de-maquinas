@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import LogoutButton from "@/components/LogoutButton";
 import ClienteCard from "@/components/ClienteCard";
+import PagoDiarioModal from "@/components/PagoDiarioModal";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -16,6 +17,7 @@ export default function ClientesPageClient() {
   const [pageActivos, setPageActivos] = useState(1);
   const [pageVencidos, setPageVencidos] = useState(1);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showPagoDiario, setShowPagoDiario] = useState(false);
 
   useEffect(() => {
     fetchClientes();
@@ -140,7 +142,13 @@ export default function ClientesPageClient() {
               }}
               className="px-3 py-2 border rounded-lg text-black w-full sm:w-48 text-sm"
             />
-            <Link
+            <button
+                onClick={() => setShowPagoDiario(true)}
+                className="bg-orange-600 text-white px-3 py-2 rounded-lg hover:bg-orange-700 text-sm whitespace-nowrap"
+              >
+                Pase del día
+              </button>
+              <Link
                 href="/auditoria"
                 className="bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 text-sm whitespace-nowrap"
               >
@@ -209,6 +217,13 @@ export default function ClientesPageClient() {
           </section>
         </div>
       </div>
+
+      {showPagoDiario && (
+        <PagoDiarioModal
+          onClose={() => setShowPagoDiario(false)}
+          onSuccess={() => {}}
+        />
+      )}
     </div>
   );
 }
