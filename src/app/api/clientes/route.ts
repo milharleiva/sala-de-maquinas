@@ -61,10 +61,10 @@ export async function POST(request: Request) {
               clienteEnHorario(c.horariosPorDia, dia, h)
             ).length;
 
-            if (count >= 17) {
+            if (count >= 16) {
               const horaStr = `${h.toString().padStart(2, "0")}:00-${(h + 1).toString().padStart(2, "0")}:00`;
               return NextResponse.json(
-                { error: `El horario ${dia} ${horaStr} ya tiene 17 personas` },
+                { error: `El horario ${dia} ${horaStr} ya tiene 16 personas` },
                 { status: 409 }
               );
             }
