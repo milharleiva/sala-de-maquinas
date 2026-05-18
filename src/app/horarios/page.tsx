@@ -21,6 +21,8 @@ function clienteEnHorario(horariosPorDia: Record<string, { inicio: string; fin: 
   if (!horariosPorDia || !horariosPorDia[dia]) return false;
   
   const horario = horariosPorDia[dia];
+  if (!horario.inicio || !horario.fin) return false;
+  
   const horaInicio = parseTime(horario.inicio);
   const horaFin = parseTime(horario.fin);
   const horaBloque = hora + 1;
@@ -30,7 +32,9 @@ function clienteEnHorario(horariosPorDia: Record<string, { inicio: string; fin: 
 
 function formatearHorarioCliente(horariosPorDia: Record<string, { inicio: string; fin: string }>, dia: string): string {
   if (!horariosPorDia || !horariosPorDia[dia]) return "-";
-  return `${horariosPorDia[dia].inicio} - ${horariosPorDia[dia].fin}`;
+  const h = horariosPorDia[dia];
+  if (!h.inicio || !h.fin) return "-";
+  return `${h.inicio} - ${h.fin}`;
 }
 
 export default function HorariosPage() {
