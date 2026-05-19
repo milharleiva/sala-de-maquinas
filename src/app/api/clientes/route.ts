@@ -12,6 +12,7 @@ function parseTime(timeStr: string): number {
 function clienteEnHorario(horariosPorDia: any, dia: string, hora: number): boolean {
   if (!horariosPorDia || !horariosPorDia[dia]) return false;
   const { inicio, fin } = horariosPorDia[dia];
+  if (!inicio || !fin) return false;
   const horaInicio = parseTime(inicio);
   const horaFin = parseTime(fin);
   return hora >= horaInicio && (hora + 1) <= horaFin;
