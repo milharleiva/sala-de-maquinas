@@ -33,17 +33,12 @@ export async function GET() {
       if (cliente.fechaIngreso) {
         const diaVencimiento = getDate(cliente.fechaIngreso);
         const hoy = startOfDay(new Date());
-        let proximoVencimiento = setDate(hoy, diaVencimiento);
-        if (isAfter(hoy, proximoVencimiento)) {
-          proximoVencimiento = addMonths(proximoVencimiento, 1);
-        }
-        if (isAfter(hoy, startOfDay(proximoVencimiento))) {
-          if (cliente.estado !== "VENCIDO") {
-            await prisma.cliente.update({
-              where: { id: cliente.id },
-              data: { estado: "VENCIDO" },
-            });
-          }
+        const vencimientoEsteMes = setDate(hoy, diaVencimiento);
+        if (isAfter(hoy, vencimientoEsteMes) && cliente.estado !== "VENCIDO") {
+          await prisma.cliente.update({
+            where: { id: cliente.id },
+            data: { estado: "VENCIDO" },
+          });
         }
       }
     }
