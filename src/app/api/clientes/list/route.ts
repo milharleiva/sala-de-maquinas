@@ -37,16 +37,10 @@ export async function GET() {
 
         if (!isAfter(hoy, vencimientoEsteMes)) continue;
 
-        // Check if the last payment covers until the next due date
+        // Check if the last payment covers this period (1 month from payment)
         if (cliente.ultimoPago) {
-          const fechaPago = startOfDay(cliente.ultimoPago);
-          // Find the next due date after the payment date
-          let sigVencimiento = setDate(fechaPago, diaVencimiento);
-          if (!isAfter(sigVencimiento, fechaPago)) {
-            sigVencimiento = addMonths(sigVencimiento, 1);
-          }
-          // If today hasn't passed the next due date, still covered
-          if (!isAfter(hoy, sigVencimiento)) continue;
+          const finCobertura = addMonths(startOfDay(cliente.ultimoPago), 1);
+          if (!isAfter(hoy, finCobertura)) continue;
         }
 
         if (cliente.estado !== "VENCIDO") {
