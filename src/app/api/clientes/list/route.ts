@@ -34,7 +34,22 @@ export async function GET() {
         const diaVencimiento = getDate(cliente.fechaIngreso);
         const hoy = startOfDay(new Date());
         const vencimientoEsteMes = setDate(hoy, diaVencimiento);
-        if (isAfter(hoy, vencimientoEsteMes) && cliente.estado !== "VENCIDO") {
+
+        if (!isAfter(hoy, vencimientoEsteMes)) continue;
+
+        // Check if the last payment covers until the next due date
+        if (cliente.ultimoPago) {
+          const fechaPago = startOfDay(cliente.ultimoPago);
+          // Find the next due date after the payment date
+          let sigVencimiento = setDate(fechaPago, diaVencimiento);
+          if (!isAfter(sigVencimiento, fechaPago)) {
+            sigVencimiento = addMonths(sigVencimiento, 1);
+          }
+          // If today hasn't passed the next due date, still covered
+          if (!isAfter(hoy, sigVencimiento)) continue;
+        }
+
+        if (cliente.estado !== "VENCIDO") {
           await prisma.cliente.update({
             where: { id: cliente.id },
             data: { estado: "VENCIDO" },
