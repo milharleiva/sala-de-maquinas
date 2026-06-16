@@ -5,6 +5,7 @@ import Link from "next/link";
 import LogoutButton from "@/components/LogoutButton";
 import ClienteCard from "@/components/ClienteCard";
 import PagoDiarioModal from "@/components/PagoDiarioModal";
+import ReactivarButton from "@/components/ReactivarButton";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -161,12 +162,15 @@ export default function ClientesPageClient() {
                 Horarios
               </Link>
             {isAdmin && (
-              <Link
-                href="/clientes/nuevo"
-                className="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 text-sm whitespace-nowrap"
-              >
-                + Nuevo
-              </Link>
+              <>
+                <ReactivarButton onSuccess={fetchClientes} />
+                <Link
+                  href="/clientes/nuevo"
+                  className="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 text-sm whitespace-nowrap"
+                >
+                  + Nuevo
+                </Link>
+              </>
             )}
           </div>
         </div>
