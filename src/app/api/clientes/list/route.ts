@@ -37,21 +37,6 @@ export async function GET() {
 
         if (!isAfter(hoy, vencimientoEsteMes)) continue;
 
-        // Check if the last payment covers this period (1 month from payment)
-        if (cliente.ultimoPago) {
-          const finCobertura = addMonths(startOfDay(cliente.ultimoPago), 1);
-          if (!isAfter(hoy, finCobertura)) {
-            // Still within coverage - ensure ACTIVO (one-time recovery for wrongly marked clients)
-            if (cliente.estado !== "ACTIVO") {
-              await prisma.cliente.update({
-                where: { id: cliente.id },
-                data: { estado: "ACTIVO" },
-              });
-            }
-            continue;
-          }
-        }
-
         if (cliente.estado !== "VENCIDO") {
           await prisma.cliente.update({
             where: { id: cliente.id },
