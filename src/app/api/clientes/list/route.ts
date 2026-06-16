@@ -37,6 +37,14 @@ export async function GET() {
 
         if (!isAfter(hoy, vencimientoEsteMes)) continue;
 
+        if (cliente.ultimoPago) {
+          const mesSiguiente = addMonths(startOfDay(cliente.ultimoPago), 1);
+          const finCobertura = setDate(mesSiguiente, diaVencimiento);
+          if (!isAfter(hoy, finCobertura)) {
+            continue;
+          }
+        }
+
         if (cliente.estado !== "VENCIDO") {
           await prisma.cliente.update({
             where: { id: cliente.id },
